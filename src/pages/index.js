@@ -33,8 +33,7 @@ export default function Home({ userData, logined, conversations }) {
 	}
 	function handleLogin(event) {
 		event.preventDefault();
-		window.location.href =
-			'https://dtizen-secure.vercel.app?redirect=http://localhost:3000/login';
+		window.location.href = `https://dtizen-secure.vercel.app?redirect=${process.env.NEXT_PUBLIC_API_ENDPOINT}/login`;
 	}
 	function handleConversationClick(idx) {
 		return () => {
