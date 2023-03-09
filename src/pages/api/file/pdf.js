@@ -1,6 +1,7 @@
 import insertConversation from '@/sql/insertConversation';
 import insertMessage from '@/sql/insertMessage';
-import { getSql } from '@/utils/cache';
+import selectUser from '@/sql/selectUser';
+import authenticate from '@/utils/authenticate';
 import { initMessageGenerator } from '@/utils/generator';
 import { checkMethod, runCorsMiddleware } from '@/utils/middleware';
 // import { Text } from 'mssql';
@@ -18,12 +19,16 @@ export default async function (req, res) {
 	// 	res.status(400).send('please enter valid url');
 	// 	return;
 	// }
+	// const authentication = await authenticate(req);
+	// if (!authentication.status) {
+	// 	res.status(404).send(authentication.data);
+	// 	return;
+	// }
+	// const userData = await selectUser(authentication.data);
+	// console.log('user data ', userData);
 	const fileUrl =
 		'https://jemixhomefileupload.s3.ap-northeast-2.amazonaws.com/uploads/QA.pdf';
-	const data = new Uint8Array(
-		await fetch(fileUrl).then((res) => res.arrayBuffer()),
-	).buffer;
-	const pdf = await pdfjsLib.getDocument(data).promise;
+	const pdf = await pdfjsLib.getDocument(fileUrl).promise;
 
 	// // 페이지에서 텍스트 추출하기
 	// const page = await pdf.getPage(1);
@@ -46,14 +51,8 @@ export default async function (req, res) {
 		allTexts += textContent.items.map((s) => s.str).join(' ');
 	});
 	try {
-		const converResult = await insertConversation('testname', 1);
-		const message = initMessageGenerator(
-			converResult.recordset[0].ID,
-			allTexts,
-		);
-		console.log('message: ', message);
-		const messageResult = await insertMessage(...message);
-		console.log('sqlResult:', messageResult);
+		const message = initMessageGenerator(7, allTexts);
+		const messageResult = await insertMessage(message);
 		res.status(200).json({ allTexts });
 	} catch (err) {
 		console.log('err: ', err);
