@@ -7,25 +7,24 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 export default function Home({ userData, logined, conversations }) {
 	const [conversationNameInput, setCNInput] = useState('');
+	const [convs, setConvs] = useState(conversations);
+	const [file, setFile] = useState(null);
 	const router = useRouter();
 	function onSubmit(event) {
 		event.preventDefault();
 		console.log('conversationName Input input: ', conversationNameInput);
+		const formData = new FormData();
+		formData.append('file', file);
+		formData.append('conversationName', conversationNameInput);
 		axios
-			.post(
-				'/api/chat/createConversation',
-				{
-					conversationName: conversationNameInput,
+			.post('/api/chat/createConversation', formData, {
+				headers: {
+					Authorization: `Bearer ${Cookie.get('chatpdf_token')}`,
 				},
-				{
-					headers: {
-						Authorization: `Bearer ${Cookie.get('chatpdf_token')}`,
-					},
-				},
-			)
+			})
 			.then((response) => {
 				console.log('response: ', response);
-				setConversations(response.data.conversations);
+				setConvs(response.data.conversations);
 			})
 			.catch((err) => {
 				console.log('err: ', err);
@@ -43,6 +42,20 @@ export default function Home({ userData, logined, conversations }) {
 			});
 		};
 	}
+	function handleFileChange(event) {
+		const input = event.target;
+		const file = input.files[0];
+		const allowedExtensions = /(\.pdf)$/i;
+
+		if (!allowedExtensions.exec(file.name)) {
+			alert('PDF 파일만 선택 가능합니다.');
+			input.value = '';
+			setFile(null);
+			return false;
+		} else {
+			setFile(event.target.files[0]);
+		}
+	}
 
 	return (
 		<div>
@@ -50,41 +63,53 @@ export default function Home({ userData, logined, conversations }) {
 				<title>OpenAI Quickstart</title>
 				<link rel='icon' href='/dog.png' />
 			</Head>
-
-			<main className={styles.main}>
-				<img src='/dog.png' className={styles.icon} />
-				<h3>Name my conversation</h3>
-				<form onSubmit={onSubmit}>
-					<input
-						type='text'
-						name='conversationName'
-						placeholder='Enter a conversation name'
-						value={conversationNameInput}
-						onChange={(e) => setCNInput(e.target.value)}
-					/>
-					<input type='submit' value='Generate conversation' />
-				</form>
-				{!logined ? (
-					<>
-						<div>you need to login first</div>
-						<button onClick={handleLogin}>login</button>
-					</>
-				) : (
+			{logined ? (
+				<main className={styles.main}>
 					<div>you are logined as {userData?.userName}</div>
-				)}
-				<h4>My conversations: </h4>
-				{conversations.map((conversation, idx) => {
-					return (
-						<div
-							key={idx}
-							style={{ cursor: 'pointer' }}
-							onClick={handleConversationClick(idx)}
+					<img src='/dog.png' className={styles.icon} />
+					<h3>Name my conversation</h3>
+					<form onSubmit={onSubmit}>
+						<input
+							type='text'
+							name='conversationName'
+							placeholder='Enter a conversation name'
+							value={conversationNameInput}
+							onChange={(e) => setCNInput(e.target.value)}
+						/>
+						학습시킬 pdf파일을 선택하세요:
+						<input
+							type='file'
+							onChange={handleFileChange}
+							accept='.pdf'
+						/>
+						<button
+							type='submit'
+							value='Generate conversation'
+							disabled={!file}
 						>
-							{conversation.conversation_name}
-						</div>
-					);
-				})}
-			</main>
+							생성하기
+						</button>
+					</form>
+
+					<h4>My conversations: </h4>
+					{convs.map((conversation, idx) => {
+						return (
+							<div
+								key={idx}
+								style={{ cursor: 'pointer' }}
+								onClick={handleConversationClick(idx)}
+							>
+								{conversation.conversation_name}
+							</div>
+						);
+					})}
+				</main>
+			) : (
+				<>
+					<div>you need to login first</div>
+					<button onClick={handleLogin}>login</button>
+				</>
+			)}
 		</div>
 	);
 }

@@ -8,7 +8,7 @@ export default function UploadPage() {
 
 		const formData = new FormData();
 		formData.append('file', file);
-
+		console.log('form data:', formData);
 		// const response = await fetch('/api/file/uploadS3', {
 		// 	method: 'POST',
 		// 	body: formData,
@@ -31,14 +31,25 @@ export default function UploadPage() {
 	}
 
 	function handleFileChange(event) {
-		setFile(event.target.files[0]);
+		const input = event.target;
+		const file = input.files[0];
+		const allowedExtensions = /(\.pdf)$/i;
+
+		if (!allowedExtensions.exec(file.name)) {
+			alert('PDF 파일만 선택 가능합니다.');
+			input.value = '';
+			setFile(null);
+			return false;
+		} else {
+			setFile(event.target.files[0]);
+		}
 	}
 
 	return (
 		<div>
 			<h1>파일 업로드</h1>
 			<form onSubmit={handleSubmit}>
-				<input type='file' onChange={handleFileChange} />
+				<input type='file' onChange={handleFileChange} accept='.pdf' />
 				<button type='submit' disabled={!file}>
 					업로드
 				</button>

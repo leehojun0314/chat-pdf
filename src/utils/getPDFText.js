@@ -25,3 +25,38 @@
 // 	});
 // 	return allTexts;
 // }
+import PdfParse from 'pdf-parse';
+import AWS from 'aws-sdk';
+import configs from '../../config/configs';
+const s3 = new AWS.S3({
+	accessKeyId: configs.s3.AWS_ACCESS_KEY_ID,
+	secretAccessKey: configs.s3.AWS_SECRET_ACCESS_KEY,
+});
+
+export default async function getPDFText(fileUrl) {
+	return new Promise((resolve, reject) => {
+		s3.getObject(
+			{
+				Bucket: 'jemixhomefileupload',
+				Key: 'uploads/QA.pdf',
+			},
+			(err, data) => {
+				if (err) {
+					console.log('s3 error: ', err);
+					reject(err);
+				} else {
+					console.log('data: ', data);
+					PdfParse(data.Body)
+						.then((result) => {
+							console.log('result: ', result);
+							resolve(result.text);
+						})
+						.catch((err) => {
+							console.log('err : ', err);
+							reject(err);
+						});
+				}
+			},
+		);
+	});
+}

@@ -13,9 +13,8 @@ export default async function handler(req, res) {
 
 	//verify
 	console.log('flag@@@@@@@@@@@@@@@@@@@@@@');
-	const authentication = await authenticate(req);
+	const authentication = await authenticate(req, res);
 	if (!authentication.status) {
-		res.status(404).send(authentication.data);
 		return;
 	}
 	try {
