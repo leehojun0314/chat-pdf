@@ -1,6 +1,7 @@
 import { getSql } from '@/utils/cache';
 export default function ({ message, conversationId, sender, messageOrder }) {
 	return new Promise((resolve, reject) => {
+		console.log('message before query: ', message);
 		getSql()
 			.then((sqlPool) => {
 				sqlPool

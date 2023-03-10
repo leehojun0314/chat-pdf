@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 		);
 		//초기 메세지 생성
 		const message = initMessageGenerator(
-			insertConverData.conversation_id,
+			insertConverData.recordset[0].conversation_id,
 			allTexts,
 		);
 		//생성된 초기 메세지 삽입

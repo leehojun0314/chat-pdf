@@ -6,7 +6,7 @@ export default function authenticate(req, res) {
 		const token = authorizationHeader?.split(' ')[1];
 
 		if (!token) {
-			res?.status(404).json({ data: 'UnAuthorized' });
+			res?.status(401).json({ data: 'UnAuthorized' });
 			return reject({ data: 'UnAuthorized', status: false });
 		} else {
 			axios
@@ -15,7 +15,7 @@ export default function authenticate(req, res) {
 					resolve({ data: response.data, status: true });
 				})
 				.catch((err) => {
-					res?.status(404).json({ data: 'UnAuthorized' });
+					res?.status(401).json({ data: 'UnAuthorized' });
 					reject({ data: err, status: false });
 				});
 		}
