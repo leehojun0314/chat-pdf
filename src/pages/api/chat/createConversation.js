@@ -5,7 +5,7 @@ import selectUser from '@/sql/selectUser';
 import authenticate from '@/utils/authenticate';
 import { initMessageGenerator } from '@/utils/generator';
 import getPDFText from '@/utils/getPDFText';
-import { checkMethod, runCorsMiddleware } from '@/utils/middleware';
+import { setHeaders } from '@/utils/middleware';
 import { uploadS3 } from '@/utils/uploadS3';
 export const config = {
 	api: {
@@ -13,12 +13,10 @@ export const config = {
 	},
 };
 export default async function handler(req, res) {
-	if (!checkMethod(req, res, ['POST'])) {
+	if (!setHeaders(req, res, ['POST'])) {
 		return;
 	}
-	if (!runCorsMiddleware(req, res)) {
-		return;
-	}
+
 	const authentication = await authenticate(req, res);
 	if (!authentication.status) {
 		return;

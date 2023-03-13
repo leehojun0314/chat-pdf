@@ -1,14 +1,12 @@
 import selectMessage from '@/sql/selectMessage';
 import authenticate from '@/utils/authenticate';
-import { checkMethod, runCorsMiddleware } from '@/utils/middleware';
+import { setHeaders } from '@/utils/middleware';
 
 export default async function (req, res) {
-	if (!checkMethod(req, res, ['GET'])) {
+	if (!setHeaders(req, res, ['GET'])) {
 		return;
 	}
-	if (!runCorsMiddleware(req, res)) {
-		return;
-	}
+
 	const authentication = await authenticate(req, res);
 	if (!authentication.status) {
 		return;

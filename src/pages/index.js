@@ -1,15 +1,50 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '@/styles/index.module.css';
 import Cookie from 'js-cookie';
 import cookies from 'next-cookies';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-export default function Home({ userData, logined, conversations }) {
+export default function Home() {
+	const [userData, setUserData] = useState(null);
+	const [logined, setLogined] = useState(false);
 	const [conversationNameInput, setCNInput] = useState('');
-	const [convs, setConvs] = useState(conversations);
+	const [conversations, setConversations] = useState([]);
 	const [file, setFile] = useState(null);
 	const router = useRouter();
+	useEffect(() => {
+		const chatpdf_token = localStorage.getItem('chatToken');
+		if (chatpdf_token) {
+			axios
+				.get(
+					`https://dtizen-secure.vercel.app/api/verify?jwt=${chatpdf_token}`,
+				)
+				.then((response) => {
+					console.log('verify response: ', response.data);
+					axios
+						.get(
+							`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/chat/getConversation`,
+							{
+								headers: {
+									Authorization: `Bearer ${chatpdf_token}`,
+								},
+							},
+						)
+						.then((converResponse) => {
+							console.log('converResponse: ', converResponse);
+							setUserData(response.data);
+							setLogined(true);
+							setConversations(converResponse.data);
+						})
+						.catch((err) => {
+							console.log('err: ', err);
+						});
+				})
+				.catch((err) => {
+					console.log('err: ', err);
+				});
+		}
+	}, []);
 	function onSubmit(event) {
 		event.preventDefault();
 		console.log('conversationName Input input: ', conversationNameInput);
@@ -19,12 +54,12 @@ export default function Home({ userData, logined, conversations }) {
 		axios
 			.post('/api/chat/createConversation', formData, {
 				headers: {
-					Authorization: `Bearer ${Cookie.get('chatpdf_token')}`,
+					Authorization: `Bearer ${localStorage.getItem('chatToken')}`,
 				},
 			})
 			.then((response) => {
 				console.log('response: ', response);
-				setConvs(response.data.conversations);
+				setConversations(response.data.conversations);
 			})
 			.catch((err) => {
 				console.log('err: ', err);
@@ -92,7 +127,7 @@ export default function Home({ userData, logined, conversations }) {
 					</form>
 
 					<h4>My conversations: </h4>
-					{convs.map((conversation, idx) => {
+					{conversations.map((conversation, idx) => {
 						return (
 							<div
 								key={idx}
@@ -113,32 +148,33 @@ export default function Home({ userData, logined, conversations }) {
 		</div>
 	);
 }
-Home.getInitialProps = async (ctx) => {
-	const chatpdf_token = cookies(ctx).chatpdf_token;
-	let userData;
-	let logined = false;
-	let conversations = [];
-	try {
-		if (chatpdf_token) {
-			const verifyResponse = await axios.get(
-				`https://dtizen-secure.vercel.app/api/verify?jwt=${chatpdf_token}`,
-			);
-			if (verifyResponse?.data) {
-				const converResponse = await axios.get(
-					`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/chat/getConversation`,
-					{
-						headers: {
-							Authorization: `Bearer ${chatpdf_token}`,
-						},
-					},
-				);
-				userData = verifyResponse.data;
-				logined = true;
-				conversations = converResponse.data;
-			}
-		}
-	} catch (error) {
-		console.log('error: ', error);
-	}
-	return { userData, logined, conversations };
-};
+// Home.getInitialProps = async (ctx) => {
+// 	// const chatpdf_token = cookies(ctx).chatpdf_token;
+// 	const chatpdf_token = localStorage.getItem('chatToken');
+// 	let userData;
+// 	let logined = false;
+// 	let conversations = [];
+// 	try {
+// 		if (chatpdf_token) {
+// 			const verifyResponse = await axios.get(
+// 				`https://dtizen-secure.vercel.app/api/verify?jwt=${chatpdf_token}`,
+// 			);
+// 			if (verifyResponse?.data) {
+// 				const converResponse = await axios.get(
+// 					`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/chat/getConversation`,
+// 					{
+// 						headers: {
+// 							Authorization: `Bearer ${chatpdf_token}`,
+// 						},
+// 					},
+// 				);
+// 				userData = verifyResponse.data;
+// 				logined = true;
+// 				conversations = converResponse.data;
+// 			}
+// 		}
+// 	} catch (error) {
+// 		console.log('error: ', error);
+// 	}
+// 	return { userData, logined, conversations };
+// };

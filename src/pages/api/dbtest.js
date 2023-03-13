@@ -1,11 +1,8 @@
 import { getSql } from '@/utils/cache';
-import { checkMethod, runCorsMiddleware } from '@/utils/middleware';
+import { setHeaders } from '@/utils/middleware';
 
 export default async function handler(req, res) {
-	if (!checkMethod(req, res, ['GET'])) {
-		return;
-	}
-	if (!runCorsMiddleware(req, res)) {
+	if (!setHeaders(req, res, ['GET'])) {
 		return;
 	}
 

@@ -1,20 +1,22 @@
 import insertMessage from '@/sql/insertMessage';
 import selectMessage from '@/sql/selectMessage';
 import authenticate from '@/utils/authenticate';
-import { checkMethod, runCorsMiddleware } from '@/utils/middleware';
+import { setHeaders } from '@/utils/middleware';
 import sendToAi from '@/utils/sendToAI';
 
-export default async function (req, res) {
-	if (!checkMethod(req, res, ['POST'])) {
+export default async function ChatAi(req, res) {
+	console.log('body@@@@: ', req.body);
+
+	if (!setHeaders(req, res, ['POST'])) {
 		return;
 	}
-	if (!runCorsMiddleware(req, res)) {
-		return;
-	}
-	const authentication = await authenticate(req, res);
-	if (!authentication.status) {
-		return;
-	}
+	// if (!runCorsMiddleware(req, res)) {
+	// 	return;
+	// }
+	// const authentication = await authenticate(req, res);
+	// if (!authentication.status) {
+	// 	return;
+	// }
 
 	// const text = req.body.text || '';
 	// console.log('text: ', text);
@@ -25,11 +27,12 @@ export default async function (req, res) {
 	}
 	try {
 		const messagesResult = await selectMessage(conversationId);
-		console.log('messages: ', messagesResult);
+		console.log('messages in db: ', messagesResult);
 		const { messages, answer } = await sendToAi(
 			messagesResult.recordset,
 			message,
 		);
+		console.log('answer of ai : ', messages);
 		//내가 보낸 내용 insert
 		await insertMessage({
 			message: message,
@@ -50,7 +53,7 @@ export default async function (req, res) {
 			answer: answer.content,
 		});
 	} catch (error) {
-		console.log('err: ', error);
+		// console.log('err: ', error);
 		res.status(400).send(error);
 	}
 }

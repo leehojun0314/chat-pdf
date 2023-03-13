@@ -35,7 +35,7 @@ export default function Chat() {
 		try {
 			axios
 				.post(
-					`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/chatAi`,
+					`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/chat/chatAi`,
 					{ text: chatInput, conversationId: router.query.convId },
 					{
 						headers: {

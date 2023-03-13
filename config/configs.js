@@ -23,5 +23,6 @@ const configs = {
 		AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
 		AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 	},
+	allowedOrigins: ['http://localhost:3000', 'http://127.0.0.1:3000'],
 };
 export default configs;

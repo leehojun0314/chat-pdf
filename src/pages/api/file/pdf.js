@@ -2,14 +2,12 @@ import insertMessage from '@/sql/insertMessage';
 import authenticate from '@/utils/authenticate';
 import { initMessageGenerator } from '@/utils/generator';
 import getPDFText from '@/utils/getPDFText';
-import { checkMethod, runCorsMiddleware } from '@/utils/middleware';
+import { setHeaders } from '@/utils/middleware';
 export default async function (req, res) {
-	if (!checkMethod(req, res, ['GET'])) {
+	if (!setHeaders(req, res, ['GET'])) {
 		return;
 	}
-	if (!runCorsMiddleware(req, res)) {
-		return;
-	}
+
 	const fileUrl = req.body.fileUrl;
 	if (!fileUrl) {
 		res.status(400).send('please enter valid url');
