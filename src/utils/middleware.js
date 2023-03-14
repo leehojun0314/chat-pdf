@@ -22,6 +22,7 @@ export function setHeaders(req, res, methods) {
 	} else {
 		if (req.method === 'OPTIONS') {
 			// Preflight 요청에 대한 응답
+			console.log('log before 200');
 			res.status(200).send();
 			return false;
 		}
