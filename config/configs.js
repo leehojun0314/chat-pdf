@@ -30,6 +30,6 @@ const configs = {
 		'http://metaschool.dtizen.com',
 		'https://dtizen.net',
 	],
-	authenticateUrl: 'http://localhost:3000',
+	authenticateUrl: 'https://dtizen-secure.vercel.app',
 };
 export default configs;
