@@ -5,6 +5,7 @@ import { setHeaders } from '@/utils/middleware';
 import sendToAi from '@/utils/sendToAI';
 
 export default async function ChatAi(req, res) {
+	console.log('req body: ', req.body);
 	if (!setHeaders(req, res, ['POST'])) {
 		return;
 	}
@@ -25,10 +26,12 @@ export default async function ChatAi(req, res) {
 	}
 	try {
 		const messagesResult = await selectMessage(conversationId);
+		console.log('messagesResult: ', messagesResult);
 		const { messages, answer } = await sendToAi(
 			messagesResult.recordset,
 			message,
 		);
+		console.log('messages , answer : ', messages);
 		//내가 보낸 내용 insert
 		await insertMessage({
 			message: message,
