@@ -7,10 +7,10 @@ export default async function (req, res) {
 		return;
 	}
 
-	const authentication = await authenticate(req, res);
-	if (!authentication.status) {
-		return;
-	}
+	// const authentication = await authenticate(req, res);
+	// if (!authentication.status) {
+	// 	return;
+	// }
 	const conversationId = req.query.convId || '';
 	if (!conversationId) {
 		res.status(404).send('please enter a valid conversation id');
