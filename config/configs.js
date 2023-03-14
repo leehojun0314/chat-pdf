@@ -25,8 +25,11 @@ const configs = {
 	},
 	allowedOrigins: [
 		'http://localhost:3000',
+		'http://localhost:3001',
 		'http://127.0.0.1:3000',
-		'http://metaschool.dtizen.com/',
+		'http://metaschool.dtizen.com',
+		'https://dtizen.net',
 	],
+	authenticateUrl: 'http://localhost:3000',
 };
 export default configs;

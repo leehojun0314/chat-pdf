@@ -5,6 +5,7 @@ import Cookie from 'js-cookie';
 import cookies from 'next-cookies';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import configs from '../../config/configs';
 export default function Home() {
 	const [userData, setUserData] = useState(null);
 	const [logined, setLogined] = useState(false);
@@ -16,9 +17,7 @@ export default function Home() {
 		const chatpdf_token = localStorage.getItem('chatToken');
 		if (chatpdf_token) {
 			axios
-				.get(
-					`https://dtizen-secure.vercel.app/api/verify?jwt=${chatpdf_token}`,
-				)
+				.get(`${configs.authenticateUrl}/api/verify?jwt=${chatpdf_token}`)
 				.then((response) => {
 					console.log('verify response: ', response.data);
 					axios
@@ -67,7 +66,7 @@ export default function Home() {
 	}
 	function handleLogin(event) {
 		event.preventDefault();
-		window.location.href = `https://dtizen-secure.vercel.app?redirect=${process.env.NEXT_PUBLIC_API_ENDPOINT}/login`;
+		window.location.href = `${configs.authenticateUrl}?redirect=${process.env.NEXT_PUBLIC_API_ENDPOINT}/login`;
 	}
 	function handleConversationClick(idx) {
 		return () => {

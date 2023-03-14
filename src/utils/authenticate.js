@@ -1,4 +1,5 @@
 import axios from 'axios';
+import configs from '../../config/configs';
 
 export default function authenticate(req, res) {
 	return new Promise((resolve, reject) => {
@@ -10,7 +11,7 @@ export default function authenticate(req, res) {
 			return reject({ data: 'UnAuthorized', status: false });
 		} else {
 			axios
-				.get(`https://dtizen-secure.vercel.app/api/verify?jwt=${token}`)
+				.get(`${configs.authenticateUrl}/api/verify?jwt=${token}`)
 				.then((response) => {
 					resolve({ data: response.data, status: true });
 				})

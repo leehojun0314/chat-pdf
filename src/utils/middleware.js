@@ -12,11 +12,14 @@ export function runMiddleware(req, res, fn) {
 
 export function setHeaders(req, res, methods) {
 	console.log('req.method: ', req.method);
+	console.log('req: ', req.headers);
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
 	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-	if (!configs.allowedOrigins.includes(req.headers.origin)) {
+	const reqOrigin = req.headers.referer.slice(0, -1);
+	console.log('allowed:', configs.allowedOrigins);
+	console.log('req origin: ', reqOrigin);
+	if (!configs.allowedOrigins.includes(reqOrigin)) {
 		res.status(403).json({ error: 'Forbidden' });
 		return false;
 	} else {
