@@ -29,6 +29,7 @@ const configs = {
 		'http://127.0.0.1:3000',
 		'http://metaschool.dtizen.com',
 		'https://dtizen.net',
+		'http://onnl.net',
 	],
 	authenticateUrl: 'https://dtizen-secure.vercel.app',
 };
