@@ -14,11 +14,9 @@ export default function ({ message, conversationId, sender, messageOrder }) {
     VALUES (@message, @conversation_id, @sender, @message_order)`,
 					)
 					.then((result) => {
-						console.log('result: ', result);
 						resolve(result);
 					})
 					.catch((err) => {
-						console.log('insert message error : ', err);
 						reject(err);
 					});
 			})

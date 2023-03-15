@@ -6,7 +6,9 @@ import sendToAi from '@/utils/sendToAI';
 
 export default async function ChatAi(req, res) {
 	console.log('req body: ', req.body);
+	res.setHeader('Access-Control-Allow-Origin', '*');
 	await runCorsMiddleware(req, res);
+	console.log('flag 1');
 	// if (!setHeaders(req, res, ['POST'])) {
 	// 	return;
 	// }
@@ -27,12 +29,12 @@ export default async function ChatAi(req, res) {
 	}
 	try {
 		const messagesResult = await selectMessage(conversationId);
-		console.log('messagesResult: ', messagesResult);
+		console.log('flag 2');
 		const { messages, answer } = await sendToAi(
 			messagesResult.recordset,
 			message,
 		);
-		console.log('messages , answer : ', messages);
+		console.log('flag 3');
 		//내가 보낸 내용 insert
 		await insertMessage({
 			message: message,
@@ -48,6 +50,7 @@ export default async function ChatAi(req, res) {
 			conversationId: conversationId,
 		});
 		const messagesFinalResult = await selectMessage(conversationId);
+		console.log('flag 4');
 		res.status(200).json({
 			messages: messagesFinalResult.recordset,
 			answer: answer.content,
