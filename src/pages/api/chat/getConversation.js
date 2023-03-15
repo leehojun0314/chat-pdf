@@ -4,9 +4,9 @@ import selectUser from '@/sql/selectUser';
 import authenticate from '@/utils/authenticate';
 import { setHeaders } from '@/utils/middleware';
 export default async function handler(req, res) {
-	if (!setHeaders(req, res, ['GET'])) {
-		return;
-	}
+	// if (!setHeaders(req, res, ['GET'])) {
+	// 	return;
+	// }
 
 	//verify
 	console.log('flag@@@@@@@@@@@@@@@@@@@@@@');

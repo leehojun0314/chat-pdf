@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Cookie from 'js-cookie';
-import cookies from 'next-cookies';
 import axios from 'axios';
 export default function Chat() {
 	const router = useRouter();
@@ -14,7 +12,9 @@ export default function Chat() {
 					`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/chat/getMessages?convId=${router.query.convId}`,
 					{
 						headers: {
-							Authorization: `Bearer ${Cookie.get('chatpdf_token')}`,
+							Authorization: `Bearer ${localStorage.getItem(
+								'chatToken',
+							)}`,
 						},
 					},
 				)
@@ -24,7 +24,8 @@ export default function Chat() {
 					setAllMessages(messages);
 				})
 				.catch((err) => {
-					router.push('/');
+					console.log(err);
+					// router.push('/');
 				});
 		}
 	}, []);
@@ -39,7 +40,9 @@ export default function Chat() {
 					{ text: chatInput, conversationId: router.query.convId },
 					{
 						headers: {
-							Authorization: `Bearer ${Cookie.get('chatpdf_token')}`,
+							Authorization: `Bearer ${localStorage.getItem(
+								'chatToken',
+							)}`,
 						},
 					},
 				)

@@ -3,15 +3,16 @@ import authenticate from '@/utils/authenticate';
 import { setHeaders } from '@/utils/middleware';
 
 export default async function (req, res) {
-	if (!setHeaders(req, res, ['GET'])) {
-		return;
-	}
+	// if (!setHeaders(req, res, ['GET'])) {
+	// 	return;
+	// }
 
 	// const authentication = await authenticate(req, res);
 	// if (!authentication.status) {
 	// 	return;
 	// }
 	const conversationId = req.query.convId || '';
+	console.log('conversation Id : ', conversationId);
 	if (!conversationId) {
 		res.status(404).send('please enter a valid conversation id');
 		return;

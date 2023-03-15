@@ -2,9 +2,9 @@ import { getSql } from '@/utils/cache';
 import { setHeaders } from '@/utils/middleware';
 
 export default async function handler(req, res) {
-	if (!setHeaders(req, res, ['GET'])) {
-		return;
-	}
+	// if (!setHeaders(req, res, ['GET'])) {
+	// 	return;
+	// }
 
 	const sql = await getSql();
 	const result = await sql

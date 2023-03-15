@@ -10,9 +10,9 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-	if (!setHeaders(req, res, ['POST'])) {
-		return;
-	}
+	// if (!setHeaders(req, res, ['POST'])) {
+	// 	return;
+	// }
 	const { fileUrl } = await uploadS3(req);
 	res.status(200).json({ fileUrl });
 }

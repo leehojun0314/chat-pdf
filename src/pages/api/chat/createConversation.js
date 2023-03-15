@@ -13,9 +13,9 @@ export const config = {
 	},
 };
 export default async function handler(req, res) {
-	if (!setHeaders(req, res, ['POST'])) {
-		return;
-	}
+	// if (!setHeaders(req, res, ['POST'])) {
+	// 	return;
+	// }
 
 	const authentication = await authenticate(req, res);
 	if (!authentication.status) {

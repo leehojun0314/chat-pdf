@@ -6,9 +6,9 @@ import sendToAi from '@/utils/sendToAI';
 
 export default async function ChatAi(req, res) {
 	console.log('req body: ', req.body);
-	if (!setHeaders(req, res, ['POST'])) {
-		return;
-	}
+	// if (!setHeaders(req, res, ['POST'])) {
+	// 	return;
+	// }
 	// if (!runCorsMiddleware(req, res)) {
 	// 	return;
 	// }

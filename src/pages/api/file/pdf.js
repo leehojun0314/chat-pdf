@@ -4,9 +4,9 @@ import { initMessageGenerator } from '@/utils/generator';
 import getPDFText from '@/utils/getPDFText';
 import { setHeaders } from '@/utils/middleware';
 export default async function (req, res) {
-	if (!setHeaders(req, res, ['GET'])) {
-		return;
-	}
+	// if (!setHeaders(req, res, ['GET'])) {
+	// 	return;
+	// }
 
 	const fileUrl = req.body.fileUrl;
 	if (!fileUrl) {
