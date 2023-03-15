@@ -1,11 +1,12 @@
 import insertMessage from '@/sql/insertMessage';
 import selectMessage from '@/sql/selectMessage';
 import authenticate from '@/utils/authenticate';
-import { setHeaders } from '@/utils/middleware';
+import { runCorsMiddleware, setHeaders } from '@/utils/middleware';
 import sendToAi from '@/utils/sendToAI';
 
 export default async function ChatAi(req, res) {
 	console.log('req body: ', req.body);
+	await runCorsMiddleware(req, res);
 	// if (!setHeaders(req, res, ['POST'])) {
 	// 	return;
 	// }

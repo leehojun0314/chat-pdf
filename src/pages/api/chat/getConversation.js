@@ -2,12 +2,12 @@ import insertUser from '@/sql/insertUser';
 import selectConversation from '@/sql/selectConversation';
 import selectUser from '@/sql/selectUser';
 import authenticate from '@/utils/authenticate';
-import { setHeaders } from '@/utils/middleware';
+import { runCorsMiddleware, setHeaders } from '@/utils/middleware';
 export default async function handler(req, res) {
 	// if (!setHeaders(req, res, ['GET'])) {
 	// 	return;
 	// }
-
+	await runCorsMiddleware(req, res);
 	//verify
 	console.log('flag@@@@@@@@@@@@@@@@@@@@@@');
 	const authentication = await authenticate(req, res);

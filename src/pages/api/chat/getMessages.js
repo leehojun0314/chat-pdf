@@ -1,12 +1,12 @@
 import selectMessage from '@/sql/selectMessage';
 import authenticate from '@/utils/authenticate';
-import { setHeaders } from '@/utils/middleware';
+import { runCorsMiddleware, setHeaders } from '@/utils/middleware';
 
 export default async function (req, res) {
 	// if (!setHeaders(req, res, ['GET'])) {
 	// 	return;
 	// }
-
+	await runCorsMiddleware(req, res);
 	// const authentication = await authenticate(req, res);
 	// if (!authentication.status) {
 	// 	return;

@@ -1,11 +1,34 @@
 import configs from '../../config/configs';
 import url from 'url';
+import Cors from 'cors';
+
 export function runMiddleware(req, res, fn) {
 	return new Promise((resolve, reject) => {
 		fn(req, res, (result) => {
 			if (result instanceof Error) {
 				return reject(result);
 			}
+			return resolve(result);
+		});
+	});
+}
+export function runCorsMiddleware(req, res) {
+	const cors = Cors({
+		origin: function (origin, callback) {
+			console.log('origin: ', origin);
+			if (configs.allowedOrigins.indexOf(origin) !== -1 || !origin) {
+				callback(null, true);
+			} else {
+				callback(new Error('Not allowed by CORS'));
+			}
+		},
+	});
+	return new Promise((resolve, reject) => {
+		cors(req, res, (result) => {
+			if (result instanceof Error) {
+				return reject(result);
+			}
+
 			return resolve(result);
 		});
 	});
