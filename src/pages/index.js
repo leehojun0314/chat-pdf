@@ -21,14 +21,11 @@ export default function Home() {
 				.then((response) => {
 					console.log('verify response: ', response.data);
 					axios
-						.get(
-							`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/chat/getConversation`,
-							{
-								headers: {
-									Authorization: `Bearer ${chatpdf_token}`,
-								},
+						.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/conversation`, {
+							headers: {
+								Authorization: `Bearer ${chatpdf_token}`,
 							},
-						)
+						})
 						.then((converResponse) => {
 							console.log('converResponse: ', converResponse);
 							setUserData(response.data);
@@ -51,11 +48,15 @@ export default function Home() {
 		formData.append('file', file);
 		formData.append('conversationName', conversationNameInput);
 		axios
-			.post('/api/chat/createConversation', formData, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('chatToken')}`,
+			.post(
+				`${process.env.NEXT_PUBLIC_API_ENDPOINT}/conversation/v2`,
+				formData,
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('chatToken')}`,
+					},
 				},
-			})
+			)
 			.then((response) => {
 				console.log('response: ', response);
 				setConversations(response.data.conversations);
@@ -66,7 +67,7 @@ export default function Home() {
 	}
 	function handleLogin(event) {
 		event.preventDefault();
-		window.location.href = `${configs.authenticateUrl}?redirect=${process.env.NEXT_PUBLIC_API_ENDPOINT}/login`;
+		window.location.href = `${configs.authenticateUrl}?redirect=${window.location.origin}/login`;
 	}
 	function handleConversationClick(idx) {
 		return () => {
@@ -89,6 +90,18 @@ export default function Home() {
 		} else {
 			setFile(event.target.files[0]);
 		}
+	}
+	function handleDelete(convId) {
+		return (event) => {
+			axios
+				.delete(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/conversation`)
+				.then((response) => {
+					console.log('response: ', response);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		};
 	}
 
 	return (
@@ -134,6 +147,11 @@ export default function Home() {
 								onClick={handleConversationClick(idx)}
 							>
 								{conversation.conversation_name}
+								<button
+									onClick={handleDelete(conversation.conversation_id)}
+								>
+									삭제
+								</button>
 							</div>
 						);
 					})}

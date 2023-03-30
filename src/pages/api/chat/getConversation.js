@@ -4,6 +4,7 @@ import selectUser from '@/sql/selectUser';
 import authenticate from '@/utils/authenticate';
 import { runCorsMiddleware, setHeaders } from '@/utils/middleware';
 export default async function handler(req, res) {
+	console.log('flag');
 	// if (!setHeaders(req, res, ['GET'])) {
 	// 	return;
 	// }

@@ -43,6 +43,7 @@ export default async function handler(req, res) {
 
 		//text 변환
 		const allTexts = await getPDFText(fileUrl);
+		console.log('allTexts: ', allTexts);
 		//conversation 생성
 		const insertConverData = await insertConversation(
 			conversationName,

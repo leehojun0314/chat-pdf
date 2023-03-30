@@ -34,21 +34,25 @@ const s3 = new AWS.S3({
 });
 
 export default async function getPDFText(fileUrl) {
+	console.log('file url before split: ', fileUrl);
+	const url = new URL(fileUrl);
+	const bucket = url.hostname.split('.')[0];
+	const key = url.pathname.slice(1); //첫번째 슬래시 제거
+	console.log('bucket: ', bucket);
+	console.log('key: ', key);
 	return new Promise((resolve, reject) => {
 		s3.getObject(
 			{
-				Bucket: 'jemixhomefileupload',
-				Key: 'uploads/QA.pdf',
+				Bucket: bucket,
+				Key: key,
 			},
 			(err, data) => {
 				if (err) {
 					console.log('s3 error: ', err);
 					reject(err);
 				} else {
-					console.log('data: ', data);
 					PdfParse(data.Body)
 						.then((result) => {
-							console.log('result: ', result);
 							resolve(result.text);
 						})
 						.catch((err) => {
