@@ -103,13 +103,30 @@ export default function Home() {
 				});
 		};
 	}
+	// function handleTest() {
+	// 	axios
+	// 		.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/message/v3?convId=${conversation}`, {
+	// 			headers: {
+	// 				Authorization: `Bearer ${localStorage.getItem('chatToken')}`,
+	// 			},
 
+	// 		})
+	// 		.then((response) => {
+	// 			console.log('response: ', response);
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log('err: ', err);
+	// 		});
+	// }
 	return (
 		<div>
 			<Head>
 				<title>OpenAI Quickstart</title>
 				<link rel='icon' href='/dog.png' />
 			</Head>
+			{/* <div>
+				<button onClick={handleTest}>test</button>
+			</div> */}
 			{logined ? (
 				<main className={styles.main}>
 					<div>you are logined as {userData?.userName}</div>

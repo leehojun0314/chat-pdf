@@ -11,7 +11,7 @@ export default function Chat() {
 		if (router.query.convId) {
 			axios
 				.get(
-					`${process.env.NEXT_PUBLIC_API_ENDPOINT}/message?convId=${router.query.convId}`,
+					`${process.env.NEXT_PUBLIC_API_ENDPOINT}/message/v3?convId=${router.query.convId}`,
 					{
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem(
@@ -22,8 +22,23 @@ export default function Chat() {
 				)
 				.then((response) => {
 					console.log('response: ', response.data);
-					const messages = response.data;
-					setAllMessages(messages);
+					const data = response.data;
+					const newMessages = [];
+					const questions = [];
+					for (let question of data.questions) {
+						questions.push(question.question_content);
+					}
+					const salutation = {
+						message: `${data.conversation.salutation} \n ${questions.join(
+							'\n',
+						)}`,
+					};
+					newMessages.push(salutation);
+					const oldMessages = data.messages;
+					console.log('old messages:', oldMessages);
+
+					console.log('new messages: ', newMessages);
+					setAllMessages(newMessages.concat(oldMessages));
 				})
 				.catch((err) => {
 					console.log(err);
@@ -49,10 +64,6 @@ export default function Chat() {
 							)}`,
 						},
 						onDownloadProgress: (progressEvent) => {
-							console.log(
-								'download progress event : ',
-								progressEvent.event.currentTarget.response,
-							);
 							const text = progressEvent.event.currentTarget.response;
 							temp[temp.length - 1].message = text;
 							setAllMessages([...temp]);
