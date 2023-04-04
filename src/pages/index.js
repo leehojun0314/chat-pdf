@@ -41,6 +41,9 @@ export default function Home() {
 				});
 		}
 	}, []);
+	useEffect(() => {
+		console.log('file: ', file);
+	}, [file]);
 	function onSubmit(event) {
 		event.preventDefault();
 		console.log('conversationName Input input: ', conversationNameInput);
@@ -49,7 +52,7 @@ export default function Home() {
 		formData.append('conversationName', conversationNameInput);
 		axios
 			.post(
-				`${process.env.NEXT_PUBLIC_API_ENDPOINT}/conversation/v2`,
+				`${process.env.NEXT_PUBLIC_API_ENDPOINT}/conversation/v3`,
 				formData,
 				{
 					headers: {
@@ -80,7 +83,7 @@ export default function Home() {
 	function handleFileChange(event) {
 		const input = event.target;
 		const file = input.files[0];
-		const allowedExtensions = /(\.pdf)$/i;
+		const allowedExtensions = /(\.pdf|\.hwp)$/i;
 
 		if (!allowedExtensions.exec(file.name)) {
 			alert('PDF 파일만 선택 가능합니다.');
@@ -139,12 +142,13 @@ export default function Home() {
 							placeholder='Enter a conversation name'
 							value={conversationNameInput}
 							onChange={(e) => setCNInput(e.target.value)}
+							style={{ color: 'red' }}
 						/>
 						학습시킬 pdf파일을 선택하세요:
 						<input
 							type='file'
 							onChange={handleFileChange}
-							accept='.pdf'
+							accept='.pdf, .hwp'
 						/>
 						<button
 							type='submit'
