@@ -84,7 +84,9 @@ export default function Home() {
 		const input = event.target;
 		const file = input.files[0];
 		const allowedExtensions = /(\.pdf|\.hwp)$/i;
-
+		if (!file?.name) {
+			return false;
+		}
 		if (!allowedExtensions.exec(file.name)) {
 			alert('PDF 파일만 선택 가능합니다.');
 			input.value = '';
@@ -92,6 +94,7 @@ export default function Home() {
 			return false;
 		} else {
 			setFile(event.target.files[0]);
+			return true;
 		}
 	}
 	function handleDelete(convId) {

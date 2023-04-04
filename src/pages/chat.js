@@ -65,6 +65,7 @@ export default function Chat() {
 						},
 						onDownloadProgress: (progressEvent) => {
 							const text = progressEvent.event.currentTarget.response;
+							console.log('progress text: ', text);
 							temp[temp.length - 1].message = text;
 							setAllMessages([...temp]);
 						},
